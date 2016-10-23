@@ -4,7 +4,7 @@ using System;
 
 public class Hunter : MonoBehaviour {
 	private string hunterName;
-	public bool hunterGender;			//true for male, False for female. Note: Bool is equivalent to 0 & 1
+	public string hunterGender;			//true for male, False for female. Note: Bool is equivalent to 0 & 1
 
 	public int hunterID; 				//unique identifier for Hunter instance, essentially a 'key'
 	
@@ -334,15 +334,15 @@ public class Hunter : MonoBehaviour {
 		}
 
 		else if(comparator == "farm"){
-			return compareValue(accumulatedFarmingExp, operand.AccumulatedFarmingExp);
+			return compareValue(accumulatedFarmingExp, operand.accumulatedFarmingExp);
 		}
 
 		else if(comparator == "research"){
-			return compareValue(accumulatedResearchExp, operand.AccumulatedResearchExp);
+			return compareValue(accumulatedResearchExp, operand.accumulatedResearchExp);
 		}
 
 		else if(comparator == "hunt"){
-			return compareValue(accumulatedHuntingExp, operand.AccumulatedHuntingExp);
+			return compareValue(accumulatedHuntingExp, operand.accumulatedHuntingExp);
 		}
 
 		else if(comparator == "title"){
