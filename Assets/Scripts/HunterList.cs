@@ -1,13 +1,54 @@
 using UnityEngine;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public class HunterList : MonoBehaviour {
 
-	public Hunter[] hunterList;
+	public List<Hunter> hunterList;
+    private int NextSerial;
 
-	public Hunter getID(int keyID){		//Store keys in your Building then utilize this to get the hunter
-		return new Hunter(1);			//I'll fix it later
-	}
+    /*`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````*/
+
+    public HunterList()                 //HunterList Constructor
+    {
+        hunterList = new List<Hunter>(100); //Creates a list of size 100;
+        NextSerial = 0;
+    }
+
+    /*`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````*/
+
+    /*Hunter List Functions*/
+
+    public Hunter find(int hunterID){       //Store keys in your Building then utilize this to get the hunter
+
+        Predicate<Hunter> hunterFinder = (Hunter h) => { return h.Serial == hunterID; };
+
+        return hunterList.Find(hunterFinder); //returns null if Hunter doesn't exist
+    }
+
+    public bool add(){
+        return add(new Hunter(NextSerial));
+    }
+
+    public bool add(Hunter hunter)
+    {
+        if(hunterList.Count >= 100)
+            return false;
+
+        hunterList.Add(hunter);
+        NextSerial++;
+        
+        return true;
+    }
+
+    public bool remove(Hunter hunter){
+        return hunterList.Remove(hunter);
+    }
+
+    public bool remove(int hunterID){
+        return remove(find(hunterID));
+    }
 
 	/*`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````*/
 

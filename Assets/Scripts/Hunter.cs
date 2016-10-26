@@ -1,37 +1,46 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using Random = UnityEngine.Random;
 
-public class Hunter : MonoBehaviour {
-	private string hunterName;
-	public string hunterGender;			//true for male, False for female. Note: Bool is equivalent to 0 & 1
+public class Hunter : IEquatable<Hunter> {
+	private string hunterName;				//Hunter's Name
+	private string hunterGender;			//uses Male/Female
+	private string hunterProfession;		//indicator of what facility the hunter is in
 
-	public int hunterID; 				//unique identifier for Hunter instance, essentially a 'key'
+	public int hunterID; 					//unique identifier for Hunter instance, essentially a 'key'
 	
-	public int farmingLvl;				//Hunter's current level [Farming]
-	public int researchLvl;				//Hunter's current level [Research]
-	public int huntingLvl;				//Hunter's current level [Hunting]
+	public int farmingLvl;					//Hunter's current level [Farming]
+	public int researchLvl;					//Hunter's current level [Research]
+	public int huntingLvl;					//Hunter's current level [Hunting]
 
-	public int farmingExp;				//Hunter's current xp to NextLevel [Farming]
-	public int researchExp;			//Hunter's current xp to NextLevel [Research]
-	public int huntingExp;				//Hunter's current xp to NextLevel [Hunting]
+	public int farmingExp;					//Hunter's current xp to NextLevel [Farming]
+	public int researchExp;					//Hunter's current xp to NextLevel [Research]
+	public int huntingExp;					//Hunter's current xp to NextLevel [Hunting]
 	
-	public int farmingToNextLvl;		//How many xp 'til NextLevel [Farming]
-	public int researchToNextLvl;		//How many xp 'til NextLevel [Research]
-	public int huntingToNextLvl;		//How many xp 'til NextLevel [Hunting]
+	public int farmingToNextLvl;			//How many xp 'til NextLevel [Farming]
+	public int researchToNextLvl;			//How many xp 'til NextLevel [Research]
+	public int huntingToNextLvl;			//How many xp 'til NextLevel [Hunting]
 
-	public int accumulatedFarmingExp;	//Total xp gained/accumulated [Farming]
-	public int accumulatedResearchExp;	//Total xp gained/accumulated [Research]
-	public int accumulatedHuntingExp;	//Total xp gained/accumulated [Hunting]
+	public int accumulatedFarmingExp;		//Total xp gained/accumulated [Farming]
+	public int accumulatedResearchExp;		//Total xp gained/accumulated [Research]
+	public int accumulatedHuntingExp;		//Total xp gained/accumulated [Hunting]
 
-	private string hunterTitle;			//Hunter's 'title' based on current xp levels; May not be necessary [see: title()]
+	public string artReference;				//Reference for art {to be implemented}
+	private string hunterTitle;				//Hunter's 'title' based on current xp levels; May not be necessary [see: title()]
 
-	public static int DEFAULT_LEVEL = 1;
+	private static int DEFAULT_LEVEL = 1;
+	private static string[] GENDER = new string[] {"Male","Female"};
 
 	public Hunter(int id){		//*ATTENTION* requires Random Name Generator
+		this.Serial = id;
 
+		Gender = GENDER[Random.Range(0,GENDER.Length)];
 
-		hunterID = id;
+		if(string.Compare(Gender,"Male") == 0)
+			Name = Utility.RandomBoyName();
+		else
+			Name = Utility.RandomGirlName();
 
 		farmingLvl = DEFAULT_LEVEL;
 		researchLvl = DEFAULT_LEVEL;
@@ -60,34 +69,98 @@ public class Hunter : MonoBehaviour {
 													-Santino
 		*/
 
-		//Hunter Name
-		public string HunterName{ get; set;}
+		//Hunter Personal Data
+		public string Name{
+			get{
+				return hunterName;
+			}
+			private set{
+				hunterName = value;
+			}
+		}
+
+		public string Gender{
+			get{
+				return hunterGender;
+			}
+			private set{
+				hunterGender = value;
+			}
+		}
+
+		public int Serial{
+			get{
+				return hunterID;
+			}
+			private set{				//Only the class can assign the value
+				hunterID = value;
+			}
+		}
+
+		public string Job{
+			get{
+				return hunterProfession;
+			}
+			set{
+				hunterProfession = value;
+			}
+		}
 
 		//Skill Levels
-		public int FarmingLvl{ get; set;}
-		public int ResearchLvl{ get; set;}
-		public int HuntingLvl{ get; set;}
+		public int FarmLvl
+		{
+			get{
+				return farmingLvl;
+			}
+		}
+		public int ResearchLvl
+		{
+			get{
+				return researchLvl;
+			}
+		}
+		public int HuntLvl
+		{
+			get{
+				return huntingLvl;
+			}
+		}
 
 		//Exp values::Current Level
-		public int FarmingExp{ get; set;}
-		public int ResearchExp{ get; set;}
-		public int HuntingExp{ get; set;}
+		public int FarmExp
+		{
+			get{
+				return farmingExp;
+			}
+		}
+		public int ResearchExp
+		{
+			get{
+				return researchExp;
+			}
+		}
+		public int HuntExp
+		{
+			get{
+				return huntingExp;
+			}
+		}
 	
 		//Exp values::To Next Level
-		public int FarmingToNextLvl
+		public int FarmNextLvl
 		{
 			get{
 				return farmingToNextLvl;
 			}
 		}
 
-		public int ResearchToNextLvl{
+		public int ResearchNextLvl{
 			get{
 				return researchToNextLvl;
 			}
 		}
 
-		public int HuntingToNextLvl
+		public int HuntNextLvl
 		{
 			get{
 				return huntingToNextLvl;
@@ -96,19 +169,19 @@ public class Hunter : MonoBehaviour {
 
 
 		//Exp values::Total Accumulated Exp
-		public int AccumulatedFarmingExp
+		public int TotalFarmExp
 		{
 			get{
 				return accumulatedFarmingExp;
 			}
 		}
-		public int AccumulatedResearchExp
+		public int TotalResearchExp
 		{
 			get{
 				return accumulatedResearchExp;
 			}
 		}
-		public int AccumulatedHuntingExp
+		public int TotalHuntExp
 		{
 			get{
 				return accumulatedHuntingExp;
@@ -116,7 +189,13 @@ public class Hunter : MonoBehaviour {
 		}
 
 		//Hunter Title
-		public string HunterTitle{ get; set;}			//useless because of title()
+		public string Title
+		{
+			get
+			{
+				return title();
+			}
+		}			//useless because of title()
 
 
 	/*`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````*/
@@ -286,8 +365,9 @@ public class Hunter : MonoBehaviour {
 
 	/*`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````*/
 
-	/*SerialID Functions*/
+	/*SerialID Functions*/ //fundamentally useless
 
+	/*
 	public int serialID(){				//getter function
 		return hunterID;
 	}
@@ -295,6 +375,7 @@ public class Hunter : MonoBehaviour {
 	private void assignSerialID(int id){
 		hunterID = id;
 	}
+	*/
 
 	/*`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````*/
 
@@ -310,6 +391,36 @@ public class Hunter : MonoBehaviour {
 
 		return 100 + (int)((41.25 *(adjustedLvl * adjustedLvl) )/2);
 	}
+
+	/*`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````*/
+
+	/*For implementing IEquatable interface*/
+
+	public override string ToString()			//outputs Serial [i.e. hunterID] when converted to String
+    {
+        return Serial.ToString();
+    }
+
+    public override bool Equals(object obj)		//overrides == & != [allows comparison with generic Object]
+    {
+        if (obj == null) return false;
+
+        Hunter hunterObject = obj as Hunter;	//casts generic object to Hunter
+
+        if (hunterObject == null) return false;
+        else return Equals(hunterObject);
+    }
+    public override int GetHashCode()			//Serial is now the Object's Hashcode
+    {
+        return Serial;
+    }
+    public bool Equals(Hunter other)			//Compares Serial property, objects are the same if serialID are the same
+    {
+        if (other == null) return false;
+
+        return (this.Serial.Equals(other.Serial));
+    }
+
 
 	/*`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````*/
 
@@ -350,7 +461,7 @@ public class Hunter : MonoBehaviour {
 		}
 
 		else if(comparator == "recent"){
-			return compareValue(serialID(), operand.serialID());
+			return compareValue(this.Serial, operand.Serial);
 		}
 
 		return 0;
