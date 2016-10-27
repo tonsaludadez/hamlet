@@ -20,7 +20,7 @@ public class GameStart : MonoBehaviour {
 
 	void doBehavior()
 	{
-		SceneManager.LoadScene ("ResourceManagement");
+		SceneManager.LoadScene("ResourceManagement");
 	}
 
 	// Use this for initialization
