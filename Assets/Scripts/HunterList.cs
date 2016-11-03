@@ -3,17 +3,35 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+[Serializable]
 public class HunterList : MonoBehaviour {
 
 	public List<Hunter> hunterList;
-    private int NextSerial;
+    private int nextSerial;
+
+    public int NextSerial{
+        get{
+            return nextSerial;
+        }
+    }
+
+	public int Count{
+		get{
+			return hunterList.Count;
+		}
+	}
 
     /*`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````*/
 
     public HunterList()                 //HunterList Constructor
     {
         hunterList = new List<Hunter>(100); //Creates a list of size 100;
-        NextSerial = 0;
+        nextSerial = 0;
+    }
+
+    public HunterList(ListCast cast){
+        hunterList = cast.hunterList;
+        nextSerial = cast.nextSerial;
     }
 
     /*`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````*/
@@ -28,20 +46,30 @@ public class HunterList : MonoBehaviour {
     }
 
     public bool add(){
-        return add(new Hunter(NextSerial));
+        return add(new Hunter(nextSerial));
     }
 
     public bool add(Hunter hunter)
     {
-        if(hunterList.Count >= 100)
+        
+		if (hunter.Serial % 2 == 0) {
+			hunter.Job = "Farmer";
+			GameController.controller.assignHunter(hunter.Job, hunter.hunterID);
+
+		} else {
+			hunter.Job = "Researcher";
+			GameController.controller.assignHunter(hunter.Job, hunter.hunterID);
+
+		}
+		if(hunterList.Count >= 100)
             return false;
 
         hunterList.Add(hunter);
-        NextSerial++;
+	 	nextSerial++;
         
         return true;
     }
-
+	
     public bool remove(Hunter hunter){
         return hunterList.Remove(hunter);
     }
@@ -51,6 +79,14 @@ public class HunterList : MonoBehaviour {
     }
 
 	/*`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````*/
+	/*
+	void Update(){
+		if (Time.time %2  == 0) {
+			GameController.controller.subtractFoodData (hunterList.Count);
+			Debug.Log (hunterList.Count);
+			Debug.Log (GameController.controller.foodData);
+		}
+	}*/
 
 	//Sorting Function
 

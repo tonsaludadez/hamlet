@@ -1,45 +1,30 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
-public class structureFarm : MonoBehaviour {
+public class StructureFarm : MonoBehaviour {
 
-	public static structureFarm farm;
-	public Text textHunterList;
+	//public static structureFarm farm;
+	//public Text textHunterList;
 
-	public Hunter[] farmerArray;
 
+	public List<int> farmerList;
 	public int levelFarm;
-	//public Canvas RMHud;
-	//public Slider sliderFood;
 
-	// Use this for initialization
+	public StructureFarm(){
+		farmerList = new List<int>();
+		levelFarm = 1;
+	}
 
 	void Start () {
-	//	GameController.controller.setFoodData (50);
 		Debug.Log (GameController.controller.foodData);
-		levelFarm = 1;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
-	//	sliderFood.value = GameController.controller.foodData;
-
-	}
-
-	//singleton stuff
-	void Awake(){
-		if(farm == null)
-		{
-			DontDestroyOnLoad(gameObject);
-			farm = this;
-		}
-
-		else if (farm != this)
-		{
-			Destroy(gameObject);
-		}
+	
 	}
 
 	//lovely edited this
@@ -54,6 +39,7 @@ public class structureFarm : MonoBehaviour {
 
 
 
+
 	void OnMouseDown() 
 	{
 		print ("clicked");
@@ -63,22 +49,36 @@ public class structureFarm : MonoBehaviour {
 
 
 	//this function calculates the cumulative level of all hunters currently working in the farm.
-	private int countHunterLevel(){
-		// return <retrievedNumberOfHuntersWorkingInTheFarm>;
-		return 0;
+	public int countHunterLevel(){
+
+		int lvl = 0;
+		foreach (int hunterID in GameController.controller.farm.farmerList) {
+			lvl += GameController.controller.listData.find (hunterID).FarmLvl;
+		}
+
+		return lvl;
 	}
 
-	public void setFoodFromFarm(float n){
-		GameController.controller.setFoodData (n);
-		Debug.Log (GameController.controller.foodData);
-	}
+	public int produced(){
+		int f = countHunterLevel ();
 
-	public void addFoodFromFarm(float n){
-		GameController.controller.addFoodData (n);
-		Debug.Log (GameController.controller.foodData);
+		Debug.Log ("f " + f);
+		return f;
 	}
-
+		
 	public int getLevel(){
 		return levelFarm;
+	}
+
+	public int getCount(){
+		return farmerList.Count;
+	}
+
+	public bool addToList(int id){
+		if (farmerList.Count < getLevel () * 3) {
+			farmerList.Add (id);
+			return true;
+		} else
+			return false;
 	}
 }

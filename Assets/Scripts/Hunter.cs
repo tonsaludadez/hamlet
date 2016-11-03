@@ -3,10 +3,12 @@ using System.Collections;
 using System;
 using Random = UnityEngine.Random;
 
+[Serializable()]
 public class Hunter : IEquatable<Hunter> {
-	private string hunterName;				//Hunter's Name
-	private string hunterGender;			//uses Male/Female
-	private string hunterProfession;		//indicator of what facility the hunter is in
+// public class Hunter : MonoBehaviour {
+	public string hunterName;				//Hunter's Name
+	public string hunterGender;				//uses Male/Female
+	public string hunterProfession;			//indicator of what facility the hunter is in
 
 	public int hunterID; 					//unique identifier for Hunter instance, essentially a 'key'
 	
@@ -42,9 +44,21 @@ public class Hunter : IEquatable<Hunter> {
 		else
 			Name = Utility.RandomGirlName();
 
-		farmingLvl = DEFAULT_LEVEL;
-		researchLvl = DEFAULT_LEVEL;
-		huntingLvl = DEFAULT_LEVEL;
+		if (Serial % 3 == 0)
+			Job = "Farmer";
+		else if(Serial % 3 == 1)
+			Job = "Researcher";
+		else if(Serial % 3 == 2)
+			Job = "Worker";
+
+//		farmingLvl = DEFAULT_LEVEL;
+//		researchLvl = DEFAULT_LEVEL;
+//		huntingLvl = DEFAULT_LEVEL;
+
+		farmingLvl = Random.Range(1,3);
+		researchLvl = Random.Range(1,3);
+		huntingLvl = Random.Range(1,3);
+
 
 		farmingToNextLvl = calculateNextLvl(farmingLvl);
 		researchToNextLvl = calculateNextLvl(researchLvl);
@@ -53,6 +67,9 @@ public class Hunter : IEquatable<Hunter> {
 		accumulatedFarmingExp = 0;
 		accumulatedResearchExp = 0;
 		accumulatedHuntingExp = 0;
+
+		Debug.Log ("added");
+		//return this;
 	}
 
 	/*`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````*/
@@ -103,6 +120,7 @@ public class Hunter : IEquatable<Hunter> {
 			}
 			set{
 				hunterProfession = value;
+				
 			}
 		}
 
@@ -198,6 +216,31 @@ public class Hunter : IEquatable<Hunter> {
 		}			//useless because of title()
 
 
+	/*`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````*/
+	/*public bool addToProfession(string value){
+		if (value == "Farmer") {
+			if (structureFarm.farm.farmerList.Count < structureFarm.farm.getLevel () * 3) {
+				structureFarm.farm.farmerList.Add (Serial);
+				//FarmerListController.flcontroller.addHunterToUI (HunterList.find(Serial));
+				return true;
+			}
+		} else if (value == "Researcher") {
+			if (structureAcademy.academy.researcherList.Count < structureAcademy.academy.getLevel () * 3) {
+				structureAcademy.academy.researcherList.Add (Serial);
+			//	ResearcherListController.rlcontroller.addHunterToUI (HunterList.find(Serial));
+				return true;
+			}
+		} else if (value == "Worker") {
+			if (structureWorkshop.workshop.workerList.Count < structureWorkshop.workshop.getLevel () * 3) {
+				structureWorkshop.workshop.workerList.Add (Serial);
+			//	WorkerListController.wlcontroller.addHunterToUI (HunterList.find(Serial));
+				return true;
+			}
+		} else
+			return false;
+
+		return false;
+	}*/
 	/*`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````*/
 
 	/*Hunter Data Funtions [Excluding Level and Serial]*/
@@ -414,6 +457,7 @@ public class Hunter : IEquatable<Hunter> {
     {
         return Serial;
     }
+
     public bool Equals(Hunter other)			//Compares Serial property, objects are the same if serialID are the same
     {
         if (other == null) return false;
